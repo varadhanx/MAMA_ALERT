@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MamaAlert</title>
+</head>
+<body>
+    <h2>MamaAlert Triage System</h2>
+
+    <form id="form">
+        Blood Pressure: <input type="number" id="bp"><br><br>
+        Swelling:
+        <select id="swelling">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select><br><br>
+
+        Headache:
+        <select id="headache">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select><br><br>
+
+        <button type="submit">Check Risk</button>
+    </form>
+
+    <h3 id="result"></h3>
+
+    <script>
+        document.getElementById("form").onsubmit = async function(e) {
+            e.preventDefault();
+
+            let res = await fetch("/triage", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    bp: document.getElementById("bp").value,
+                    swelling: document.getElementById("swelling").value,
+                    headache: document.getElementById("headache").value
+                })
+            });
+
+            let data = await res.json();
+            document.getElementById("result").innerText = data.risk_level;
+        };
+    </script>
+</body>
+</html>
